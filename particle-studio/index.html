@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080b12" />
+  <title>粒子宇宙 · Particle Studio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b12;
+      --panel: rgba(16, 21, 32, .76);
+      --panel-border: rgba(255, 255, 255, .095);
+      --muted: #7f899d;
+      --text: #f1f4fa;
+      --accent: #8be9dc;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 51% 49%, rgba(25, 59, 73, .23), transparent 34%),
+        radial-gradient(ellipse at 78% 10%, rgba(55, 42, 93, .14), transparent 38%),
+        linear-gradient(180deg, rgba(4, 7, 13, .1), rgba(4, 7, 13, .45));
+    }
+    #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+    .grain { position: fixed; inset: 0; pointer-events: none; z-index: 2; opacity: .14; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
+    .ui { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+    .ui button, .ui input, .ui .interactive { pointer-events: auto; }
+    .topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; padding: 0 34px; border-bottom: 1px solid rgba(255,255,255,.055); background: linear-gradient(180deg, rgba(7,10,16,.62), rgba(7,10,16,0)); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid rgba(139,233,220,.32); border-radius: 12px; color: var(--accent); background: rgba(139,233,220,.075); box-shadow: 0 0 24px rgba(91,214,207,.08); }
+    .brand-mark svg { width: 21px; height: 21px; }
+    .brand-name { font-size: 14px; font-weight: 640; letter-spacing: .13em; }
+    .brand-sub { margin-top: 3px; color: #768195; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; }
+    .top-center { display: flex; align-items: center; gap: 10px; color: #8993a5; font-size: 11px; letter-spacing: .08em; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 11px var(--accent); }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-button, .camera-button { height: 38px; border: 1px solid var(--panel-border); border-radius: 12px; color: #dbe2ed; background: rgba(255,255,255,.045); cursor: pointer; transition: .2s ease; }
+    .icon-button { display: grid; place-items: center; width: 40px; }
+    .icon-button svg { width: 16px; height: 16px; }
+    .icon-button:hover, .camera-button:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.2); }
+    .camera-button { display: flex; align-items: center; gap: 9px; padding: 0 13px; font: 500 11px var(--sans); }
+    .camera-button svg { width: 15px; height: 15px; color: var(--accent); }
+    .camera-button.active { border-color: rgba(139,233,220,.3); background: rgba(139,233,220,.09); }
+    .panel { position: absolute; pointer-events: auto; border: 1px solid var(--panel-border); border-radius: 18px; background: linear-gradient(145deg, rgba(19,25,37,.84), rgba(13,17,27,.76)); box-shadow: 0 16px 55px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.035); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
+    .model-panel { left: 30px; top: 104px; width: 245px; padding: 17px 13px 13px; }
+    .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; padding: 0 5px 13px; }
+    .eyebrow { color: #7c879b; font-size: 9px; letter-spacing: .19em; text-transform: uppercase; }
+    .panel-title { margin-top: 5px; font-size: 14px; font-weight: 590; letter-spacing: .035em; }
+    .count-pill { margin-top: 1px; padding: 5px 7px; color: #929caf; font-size: 9px; border: 1px solid rgba(255,255,255,.075); border-radius: 7px; background: rgba(255,255,255,.035); }
+    .model-list { display: grid; gap: 5px; }
+    .model-option { width: 100%; height: 39px; padding: 0 9px; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: #aeb7c7; text-align: left; cursor: pointer; font: 450 11px var(--sans); transition: .2s ease; }
+    .model-option:hover { color: #f0f3f8; background: rgba(255,255,255,.045); }
+    .model-option.selected { color: #f2f8f8; border-color: rgba(139,233,220,.17); background: linear-gradient(90deg, rgba(139,233,220,.11), rgba(139,233,220,.035)); }
+    .model-glyph { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; color: #9aa7b8; background: rgba(255,255,255,.055); font-size: 13px; }
+    .selected .model-glyph { color: var(--accent); background: rgba(139,233,220,.13); }
+    .model-name { flex: 1; }
+    .model-tag { color: #596477; font-size: 8px; letter-spacing: .08em; }
+    .selected .model-tag { color: #76b9b3; }
+    .right-stack { position: absolute; top: 104px; right: 30px; width: 225px; display: grid; gap: 11px; }
+    .color-panel { padding: 17px 16px 15px; }
+    .color-title-row { display: flex; align-items: center; justify-content: space-between; }
+    .color-hex { color: #8792a5; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .05em; }
+    .color-row { margin-top: 16px; display: flex; align-items: center; gap: 11px; }
+    input[type="color"] { appearance: none; -webkit-appearance: none; width: 38px; height: 38px; padding: 0; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: transparent; cursor: pointer; overflow: hidden; }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 11px; }
+    .color-hint { color: #778296; font-size: 9px; line-height: 1.6; }
+    .swatches { margin-top: 14px; display: flex; gap: 8px; }
+    .swatch { width: 17px; height: 17px; padding: 0; border: 1px solid rgba(255,255,255,.19); border-radius: 50%; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+    .swatch:hover { transform: scale(1.17); }
+    .swatch.active { outline: 1px solid rgba(255,255,255,.75); outline-offset: 3px; }
+    .gesture-panel { padding: 15px 16px 14px; }
+    .gesture-heading { display: flex; align-items: center; justify-content: space-between; }
+    .gesture-live { display: flex; align-items: center; gap: 6px; color: #6e7b8f; font-size: 9px; }
+    .gesture-live .live-dot { width: 5px; height: 5px; opacity: .72; }
+    .gesture-live.connected { color: #88d6cd; }
+    .gesture-live.connected .live-dot { opacity: 1; }
+    .gesture-list { margin-top: 12px; display: grid; gap: 10px; }
+    .gesture-item { display: flex; align-items: center; gap: 9px; color: #9ba5b5; font-size: 9px; }
+    .gesture-icon { width: 23px; height: 23px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 7px; background: rgba(255,255,255,.05); color: #bac4d2; font-size: 12px; }
+    .gesture-item strong { color: #dfe5ee; font-weight: 520; }
+    .gesture-note { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.06); color: #647187; font-size: 8px; line-height: 1.65; }
+    .camera-preview { position: absolute; right: 30px; bottom: 94px; width: 190px; padding: 6px; overflow: hidden; display: none; }
+    .camera-preview.visible { display: block; }
+    .camera-frame { position: relative; overflow: hidden; border-radius: 11px; }
+    .camera-preview video { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 11px; transform: scaleX(-1); opacity: .82; }
+    .hand-overlay { position: absolute; inset: 0; width: 100%; height: 100%; transform: scaleX(-1); pointer-events: none; }
+    .camera-caption { display: flex; justify-content: space-between; padding: 7px 5px 2px; color: #8f9bad; font-size: 8px; }
+    .camera-caption span:last-child { color: #61cfc0; }
+    .bottom-center { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; white-space: nowrap; color: #778397; font-size: 9px; letter-spacing: .02em; }
+    .bottom-center .sep { width: 3px; height: 3px; border-radius: 50%; background: #465164; }
+    .bottom-center strong { color: #bbc5d3; font-weight: 500; }
+    .model-caption { position: absolute; left: 50%; bottom: 73px; transform: translateX(-50%); text-align: center; pointer-events: none; }
+    .model-caption .current-model { font-size: 11px; letter-spacing: .22em; color: rgba(224,237,241,.78); }
+    .model-caption .hint { margin-top: 6px; color: rgba(123,140,158,.63); font-size: 8px; letter-spacing: .12em; }
+    .toast { position: absolute; left: 50%; top: 89px; transform: translate(-50%, -8px); padding: 9px 14px; opacity: 0; pointer-events: none; border: 1px solid rgba(255,255,255,.11); border-radius: 10px; background: rgba(17,22,33,.9); color: #d6deeb; font-size: 10px; transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .hidden-video { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    @media (max-width: 760px) {
+      .topbar { height: 64px; padding: 0 15px; }
+      .top-center { display: none; }
+      .brand-name { font-size: 12px; }
+      .camera-button { height: 35px; padding: 0 10px; font-size: 10px; }
+      .header-actions { gap: 6px; }
+      .model-panel { left: 12px; right: 12px; top: 75px; width: auto; padding: 11px 10px; }
+      .panel-heading { padding: 0 4px 8px; align-items: center; }
+      .panel-heading > div:first-child .eyebrow { display: none; }
+      .panel-title { margin-top: 0; font-size: 12px; }
+      .model-list { display: flex; overflow-x: auto; gap: 5px; scrollbar-width: none; }
+      .model-list::-webkit-scrollbar { display: none; }
+      .model-option { flex: 0 0 auto; width: auto; height: 33px; padding: 0 8px; gap: 6px; font-size: 9px; }
+      .model-glyph { width: 20px; height: 20px; font-size: 11px; }
+      .model-tag { display: none; }
+      .right-stack { top: auto; right: 12px; bottom: 62px; width: 168px; gap: 7px; }
+      .color-panel { padding: 11px; }
+      .color-panel .eyebrow { font-size: 8px; }
+      .color-row { margin-top: 8px; }
+      .color-hint { font-size: 8px; }
+      .swatches { margin-top: 9px; gap: 7px; }
+      .swatch { width: 14px; height: 14px; }
+      .gesture-panel { padding: 11px; }
+      .gesture-list { gap: 7px; margin-top: 8px; }
+      .gesture-item { font-size: 8px; }
+      .gesture-icon { width: 20px; height: 20px; }
+      .gesture-note { display: none; }
+      .camera-preview { right: 12px; bottom: 62px; width: 150px; }
+      .camera-preview.visible { bottom: 267px; }
+      .model-caption { bottom: 35px; }
+      .model-caption .hint { display: none; }
+      .bottom-center { display: none; }
+      .toast { top: 150px; }
+    }
+    @media (max-width: 400px) { .right-stack { width: 154px; } .camera-preview.visible { bottom: 255px; } }
+  </style>
+</head>
+<body>
+  <canvas id="scene" aria-label="实时 3D 粒子场景"></canvas>
+  <div class="grain"></div>
+  <div class="ui">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z" stroke="currentColor" stroke-width="1.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></div>
+        <div><div class="brand-name">粒子宇宙</div><div class="brand-sub">PARTICLE STUDIO</div></div>
+      </div>
+      <div class="top-center"><span class="live-dot"></span><span>REALTIME PARTICLE EXPERIENCE</span></div>
+      <div class="header-actions">
+        <button class="camera-button" id="cameraBtn" type="button" title="启用摄像头手势控制">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10 5-3v10l-5-3"/></svg><span id="cameraBtnText">开启手势</span>
+        </button>
+        <button class="icon-button" id="fullscreenBtn" type="button" title="全屏" aria-label="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+      </div>
+    </header>
+
+    <section class="panel model-panel" aria-label="模型选择">
+      <div class="panel-heading"><div><div class="eyebrow">01 / FORM</div><div class="panel-title">粒子形态</div></div><div class="count-pill">28,000 粒子</div></div>
+      <div class="model-list" id="modelList">
+        <button class="model-option selected" data-model="heart"><span class="model-glyph">♡</span><span class="model-name">心之引力</span><span class="model-tag">01</span></button>
+        <button class="model-option" data-model="flower"><span class="model-glyph">✿</span><span class="model-name">花漾</span><span class="model-tag">02</span></button>
+        <button class="model-option" data-model="saturn"><span class="model-glyph">♄</span><span class="model-name">土星环</span><span class="model-tag">03</span></button>
+        <button class="model-option" data-model="fireworks"><span class="model-glyph">✦</span><span class="model-name">星火绽放</span><span class="model-tag">04</span></button>
+        <button class="model-option" data-model="earth"><span class="model-glyph">◎</span><span class="model-name">蔚蓝星球</span><span class="model-tag">05</span></button>
+        <button class="model-option" data-model="landscape"><span class="model-glyph">山</span><span class="model-name">千里江山</span><span class="model-tag">06</span></button>
+        <button class="model-option" data-model="tanhua"><span class="model-glyph">✺</span><span class="model-name">昙花一现</span><span class="model-tag">07</span></button>
+      </div>
+    </section>
+
+    <div class="right-stack">
+      <section class="panel color-panel" aria-label="粒子颜色">
+        <div class="color-title-row"><div><div class="eyebrow">02 / COLOR</div><div class="panel-title">粒子色彩</div></div><span class="color-hex" id="colorHex">#8BE9DC</span></div>
+        <div class="color-row"><input id="colorPicker" type="color" value="#8be9dc" aria-label="选择粒子颜色"/><div class="color-hint">选择颜色<br/>让星尘映出你的心情</div></div>
+        <div class="swatches" aria-label="快捷颜色">
+          <button class="swatch active" data-color="#8BE9DC" style="background:#8BE9DC" title="薄荷青"></button>
+          <button class="swatch" data-color="#FF77A8" style="background:#FF77A8" title="樱花粉"></button>
+          <button class="swatch" data-color="#A88BFF" style="background:#A88BFF" title="星云紫"></button>
+          <button class="swatch" data-color="#FFC978" style="background:#FFC978" title="暖阳金"></button>
+          <button class="swatch" data-color="#7FB7FF" style="background:#7FB7FF" title="冰川蓝"></button>
+          <button class="swatch" data-color="#E9F1FF" style="background:#E9F1FF" title="月光白"></button>
+        </div>
+      </section>
+      <section class="panel gesture-panel" aria-label="手势说明">
+        <div class="gesture-heading"><div><div class="eyebrow">03 / GESTURE</div><div class="panel-title">手势操控</div></div><div class="gesture-live" id="gestureStatus"><span class="live-dot"></span><span id="gestureText">待连接</span></div></div>
+        <div class="gesture-list">
+          <div class="gesture-item"><span class="gesture-icon">✋</span><span><strong>张开 / 握拳</strong>　粒子扩散 / 聚合</span></div>
+          <div class="gesture-item"><span class="gesture-icon">☝</span><span><strong>移动食指</strong>　旋转粒子群</span></div>
+          <div class="gesture-item"><span class="gesture-icon">↕</span><span><strong>前后移动</strong>　拉近 / 推远</span></div>
+        </div>
+        <div class="gesture-note">摄像头画面只在本机进行手势识别，不会上传。</div>
+      </section>
+    </div>
+
+    <div class="panel camera-preview" id="cameraPreview"><div class="camera-frame"><video id="cameraVideo" autoplay muted playsinline></video><canvas id="handOverlay" class="hand-overlay"></canvas></div><div class="camera-caption"><span>整只手入镜 · 光线充足</span><span>● LIVE</span></div></div>
+    <div class="model-caption"><div class="current-model" id="currentModel">心之引力</div><div class="hint">DRAG TO ORBIT &nbsp;·&nbsp; SCROLL TO ZOOM</div></div>
+    <div class="bottom-center"><span><strong>拖动</strong> 旋转视角</span><span class="sep"></span><span><strong>滚轮</strong> 缩放粒子</span><span class="sep"></span><span>或开启摄像头，用手势创造</span></div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" crossorigin="anonymous"></script>
+  <script>
+    // A classic script build keeps the scene usable when this HTML is opened
+    // directly from file://, where browser module imports are commonly blocked.
+    if (!window.THREE) {
+      const toast = document.querySelector('#toast');
+      toast.textContent = 'Three.js 加载失败，请检查网络连接后刷新页面。';
+      toast.classList.add('show');
+      throw new Error('Three.js could not be loaded from jsDelivr.');
+    }
+    const COUNT = 28000;
+    const canvas = document.querySelector('#scene');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x080b12, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 9.2);
+    const particleRoot = new THREE.Group();
+    scene.add(particleRoot);
+
+    const positions = new Float32Array(COUNT * 3);
+    const targets = new Float32Array(COUNT * 3);
+    const sizes = new Float32Array(COUNT);
+    const seeds = new Float32Array(COUNT);
+    const lights = new Float32Array(COUNT);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
+    geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    geometry.setAttribute('aLight', new THREE.BufferAttribute(lights, 1));
+    for (let i = 0; i < COUNT; i++) {
+      sizes[i] = .65 + Math.random() * 1.55;
+      seeds[i] = Math.random() * 6.283;
+      lights[i] = .2 + Math.random() * .7;
+    }
+    const particleMaterial = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uColor: { value: new THREE.Color('#8be9dc') }, uTime: { value: 0 }, uPixelRatio: { value: renderer.getPixelRatio() } },
+      vertexShader: `
+        attribute float aSize; attribute float aSeed; attribute float aLight;
+        uniform float uTime; uniform float uPixelRatio;
+        varying float vAlpha; varying float vLight;
+        void main() {
+          vec3 p = position;
+          float shimmer = 0.89 + 0.11 * sin(uTime * 1.15 + aSeed * 5.0);
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_Position = projectionMatrix * mv;
+          gl_PointSize = max(1.0, aSize * shimmer * uPixelRatio * (7.2 / max(1.0, -mv.z / 9.2)));
+          vAlpha = 0.5 + 0.5 * sin(uTime * 0.72 + aSeed * 2.0);
+          vLight = aLight;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor; varying float vAlpha; varying float vLight;
+        void main() {
+          vec2 uv = gl_PointCoord - 0.5; float d = length(uv);
+          if (d > 0.5) discard;
+          float halo = exp(-d * 11.0) * 0.58;
+          float core = smoothstep(0.24, 0.015, d) * 0.9;
+          float alpha = (halo + core) * (0.55 + 0.45 * vAlpha);
+          vec3 tint = uColor * (0.58 + vLight * 0.72);
+          gl_FragColor = vec4(tint, alpha);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }
+      `
+    });
+    const cloud = new THREE.Points(geometry, particleMaterial);
+    cloud.frustumCulled = false;
+    particleRoot.add(cloud);
+
+    // Fine, distant dust gives the scene depth without competing with the main form.
+    const dustCount = 1150;
+    const dustGeometry = new THREE.BufferGeometry();
+    const dustPositions = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      const r = 5 + Math.random() * 13, a = Math.random() * Math.PI * 2;
+      dustPositions[i * 3] = Math.cos(a) * r;
+      dustPositions[i * 3 + 1] = (Math.random() - .5) * 12;
+      dustPositions[i * 3 + 2] = -2 - Math.random() * 13;
+    }
+    dustGeometry.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+    const dust = new THREE.Points(dustGeometry, new THREE.PointsMaterial({ color: 0x7897af, size: 1.15, transparent: true, opacity: .33, sizeAttenuation: false, depthWrite: false }));
+    scene.add(dust);
+
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const modelNames = { heart: '心之引力', flower: '花漾', saturn: '土星环', fireworks: '星火绽放', earth: '蔚蓝星球', landscape: '千里江山', tanhua: '昙花一现' };
+    let activeModel = 'heart';
+    let currentSpread = 1, targetSpread = 1;
+    let currentZoom = 1, targetZoom = 1;
+    let targetYaw = 0, targetPitch = 0;
+    let pointerYaw = 0, pointerPitch = 0, pointerDown = false, lastPointerX = 0, lastPointerY = 0;
+    let cameraActive = false, handsTask = null, cameraStream = null;
+    let lastScan = 0, handSending = false, handFailureShown = false, handResultSeen = false, handStallNotified = false, handStartAt = 0, pointMode = false, pointBaseSpan = 0;
+    let toastTimer = 0;
+
+    function heartTarget(i) {
+      const t = Math.random() * Math.PI * 2;
+      const bx = 16 * Math.pow(Math.sin(t), 3);
+      const by = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+      const fill = .2 + .8 * Math.sqrt(Math.random());
+      return [bx * .17 * fill, (by + 6) * .16 * fill, rand(-.34, .34) * (1.1 - fill * .35)];
+    }
+    function flowerTarget() {
+      const a = Math.random() * Math.PI * 2;
+      const lobe = .5 + .5 * Math.cos(5 * a);
+      const outer = .55 + 2.12 * Math.pow(Math.max(0, lobe), 1.8);
+      const r = .14 + (outer - .14) * Math.sqrt(Math.random());
+      return [r * Math.cos(a), r * Math.sin(a), .24 * Math.sin(a * 5) + rand(-.13, .13)];
+    }
+    function spherePoint(radius = 1) {
+      const y = rand(-1, 1), a = Math.random() * Math.PI * 2, q = Math.sqrt(1 - y*y);
+      return [radius * q * Math.cos(a), radius * y, radius * q * Math.sin(a)];
+    }
+    const landRegions = [
+      [-1.85, .25, .28, .56], [-1.55, .78, .2, .28], [-1.12, .28, .34, .3], [-.52, .32, .21, .35],
+      [.08, .22, .2, .31], [.32, .8, .25, .22], [.65, .39, .39, .34], [1.24, .21, .27, .26],
+      [1.85, .58, .35, .32], [2.5, .36, .32, .35], [-2.6, .71, .27, .16]
+    ];
+    function isLand(lon, lat) {
+      for (const [cx, cy, rx, ry] of landRegions) {
+        let dx = Math.abs(lon - cx); dx = Math.min(dx, Math.PI * 2 - dx);
+        if ((dx/rx)**2 + ((lat-cy)/ry)**2 < 1) return true;
+      }
+      return false;
+    }
+    const peaks = [
+      [-2.9, 1.35, .58], [-2.15, 1.8, .76], [-1.23, 1.05, .55], [-.42, 1.8, .73],
+      [.55, 1.28, .54], [1.32, 1.9, .82], [2.25, 1.42, .7], [3.08, 1.18, .65]
+    ];
+    function mountainHeight(x) {
+      let h = 0;
+      for (const [cx, height, width] of peaks) h = Math.max(h, height * Math.exp(-(((x-cx)/width)**2)));
+      return h;
+    }
+    function makeTarget(type, i) {
+      let p, light = rand(.42, 1.0);
+      if (type === 'heart') p = heartTarget(i);
+      else if (type === 'flower') p = flowerTarget();
+      else if (type === 'saturn') {
+        if (Math.random() < .43) { p = spherePoint(1.22); light = rand(.65, 1.0); }
+        else {
+          const a = Math.random() * Math.PI * 2, r = rand(1.55, 2.65), tilt = .22;
+          p = [Math.cos(a)*r, Math.sin(a)*r*tilt + rand(-.055,.055), Math.sin(a)*r];
+          light = rand(.45, .9);
+        }
+      } else if (type === 'fireworks') {
+        const cluster = Math.floor(Math.random() * 6);
+        const centers = [[-2.1,1.0,0],[0,1.55,-.1],[2.15,.95,.1],[-1.55,-1.2,0],[.55,-.95,.25],[2.1,-1.35,-.1]];
+        const [cx,cy,cz] = centers[cluster];
+        const spoke = Math.floor(Math.random() * 34), a = spoke / 34 * Math.PI * 2 + cluster * .29;
+        const zdir = rand(-.85,.85), norm = Math.sqrt(1 + zdir*zdir);
+        const d = rand(.08, 1.18), side = rand(-.055,.055) + d * rand(-.035,.035);
+        p = [cx + Math.cos(a)*d/norm - Math.sin(a)*side, cy + zdir*d/norm + rand(-.025,.025), cz + Math.sin(a)*d/norm + Math.cos(a)*side];
+        light = .6 + Math.random()*.7;
+      } else if (type === 'earth') {
+        const [x,y,z] = spherePoint(2.15), lon = Math.atan2(z,x), lat = Math.asin(y/2.15);
+        p = [x,y,z]; light = isLand(lon,lat) ? rand(.95,1.35) : rand(.28,.55);
+      } else if (type === 'landscape') {
+        const u = Math.random();
+        if (u < .72) {
+          const x = rand(-3.35,3.35), layer = Math.random() < .48 ? 0 : (Math.random() < .7 ? 1 : 2);
+          const base = [-.5,-.98,-1.45][layer];
+          const h = mountainHeight(x) * [1,.76,.52][layer];
+          const y = base + h + rand(-.13,.13);
+          p = [x,y,[-.48,-.04,.42][layer] + rand(-.09,.09)];
+          light = clamp(.72 + h*.16 + rand(-.12,.12), .4, 1.3);
+        } else if (u < .91) {
+          const x = rand(-3.25,3.25), y = -2.05 + .22*Math.sin(x*1.1) + rand(-.045,.045);
+          p = [x,y,.62+rand(-.07,.07)]; light = rand(.65,1.1);
+        } else {
+          p = [rand(-3.2,3.2),rand(.35,2.45),rand(-.5,.5)]; light=rand(.45,.9);
+        }
+      } else { // Night-blooming cereus: long, soft petals and fine stamens.
+        const u = Math.random();
+        if (u < .78) {
+          const petals = 8, petal = Math.floor(Math.random()*petals), a = petal/petals*Math.PI*2 + rand(-.045,.045);
+          const t = Math.sqrt(Math.random()), r = .17 + 2.48*t;
+          const width = .34 * Math.pow(Math.sin(Math.PI*t), .72) * rand(-1,1);
+          p = [Math.cos(a)*r - Math.sin(a)*width, Math.sin(a)*r + Math.cos(a)*width, .28*Math.sin(t*Math.PI) + rand(-.1,.1)];
+          light = rand(.8,1.2);
+        } else if (u < .96) {
+          const a = Math.random()*Math.PI*2, t = Math.random(), r = .12 + t*1.12;
+          p = [Math.cos(a)*r, Math.sin(a)*r, .06 + .58*t*t + rand(-.035,.035)]; light = rand(.8,1.25);
+        } else { p = spherePoint(.25); light=1.25; }
+      }
+      return [p[0],p[1],p[2],light];
+    }
+    function setModel(type) {
+      activeModel = type;
+      for (let i=0; i<COUNT; i++) {
+        const p = makeTarget(type, i), k=i*3;
+        targets[k]=p[0]; targets[k+1]=p[1]; targets[k+2]=p[2]; lights[i]=p[3];
+      }
+      geometry.attributes.aLight.needsUpdate = true;
+      document.querySelectorAll('.model-option').forEach(b => b.classList.toggle('selected', b.dataset.model === type));
+      document.querySelector('#currentModel').textContent = modelNames[type];
+    }
+    setModel('heart');
+    positions.set(targets);
+    geometry.attributes.position.needsUpdate = true;
+
+    document.querySelector('#modelList').addEventListener('click', e => {
+      const button = e.target.closest('[data-model]');
+      if (button) setModel(button.dataset.model);
+    });
+    const colorPicker = document.querySelector('#colorPicker');
+    function setColor(hex) {
+      colorPicker.value = hex;
+      particleMaterial.uniforms.uColor.value.set(hex);
+      document.querySelector('#colorHex').textContent = hex.toUpperCase();
+      document.querySelectorAll('.swatch').forEach(b => b.classList.toggle('active', b.dataset.color.toLowerCase() === hex.toLowerCase()));
+    }
+    colorPicker.addEventListener('input', e => setColor(e.target.value));
+    document.querySelector('.swatches').addEventListener('click', e => { const b=e.target.closest('[data-color]'); if(b) setColor(b.dataset.color); });
+
+    function showToast(message) {
+      const el = document.querySelector('#toast'); el.textContent = message; el.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 3400);
+    }
+    function setGestureStatus(text, connected=cameraActive) {
+      document.querySelector('#gestureText').textContent = text;
+      document.querySelector('#gestureStatus').classList.toggle('connected', connected);
+    }
+    let handsLibraryPromise = null;
+    function loadHandsLibrary() {
+      if (typeof window.Hands === 'function') return Promise.resolve();
+      if (!handsLibraryPromise) {
+        handsLibraryPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js';
+          script.crossOrigin = 'anonymous';
+          script.onload = () => typeof window.Hands === 'function' ? resolve() : reject(new Error('Hand tracking library did not initialize.'));
+          script.onerror = () => reject(new Error('Hand tracking library could not be downloaded.'));
+          document.head.appendChild(script);
+        });
+      }
+      return handsLibraryPromise;
+    }
+    function dist2(a,b) { return Math.hypot(a.x-b.x,a.y-b.y); }
+    function handSpan(lm) {
+      const xs=lm.map(p=>p.x), ys=lm.map(p=>p.y);
+      return Math.sqrt((Math.max(...xs)-Math.min(...xs))*(Math.max(...ys)-Math.min(...ys)));
+    }
+    const handLinks=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+    function drawHandOverlay(lm) {
+      const overlay=document.querySelector('#handOverlay'), video=document.querySelector('#cameraVideo');
+      if (!overlay) return;
+      const ctx=overlay.getContext('2d');
+      if (!video.videoWidth || !video.videoHeight) { ctx.clearRect(0,0,overlay.width,overlay.height); return; }
+      if (overlay.width!==video.videoWidth || overlay.height!==video.videoHeight) {
+        overlay.width=video.videoWidth; overlay.height=video.videoHeight;
+      }
+      ctx.clearRect(0,0,overlay.width,overlay.height);
+      if (!lm) return;
+      ctx.lineWidth=Math.max(2,overlay.width*.006); ctx.lineCap='round'; ctx.strokeStyle='rgba(116,255,224,.86)';
+      for (const [a,b] of handLinks) { ctx.beginPath(); ctx.moveTo(lm[a].x*overlay.width,lm[a].y*overlay.height); ctx.lineTo(lm[b].x*overlay.width,lm[b].y*overlay.height); ctx.stroke(); }
+      for (const p of lm) { ctx.beginPath(); ctx.arc(p.x*overlay.width,p.y*overlay.height,Math.max(2.2,overlay.width*.009),0,Math.PI*2); ctx.fillStyle='rgba(238,255,250,.95)'; ctx.fill(); }
+    }
+    function processHand(lm) {
+      const wrist=lm[0], fingers=[8,12,16,20], pips=[6,10,14,18];
+      const palm = Math.max(.001, dist2(wrist,lm[9]));
+      const openness = fingers.reduce((sum,idx)=>sum+dist2(wrist,lm[idx])/palm,0)/fingers.length;
+      const extended = (tip,pip) => dist2(wrist,lm[tip]) > dist2(wrist,lm[pip])*1.12;
+      const pointing = extended(8,6) && !extended(12,10) && !extended(16,14) && !extended(20,18);
+      if (pointing) {
+        const span=handSpan(lm);
+        if (!pointMode) { pointMode=true; pointBaseSpan=Math.max(.045,span); }
+        const index=lm[8];
+        targetYaw=clamp((.5-index.x)*2.15,-1.25,1.25);
+        targetPitch=clamp((.5-index.y)*1.4,-.78,.78);
+        targetZoom=clamp(Math.pow(span/pointBaseSpan,.78),.58,1.6);
+        targetSpread=1;
+        setGestureStatus('单指 · 旋转 / 缩放');
+      } else {
+        pointMode=false;
+        const open=clamp((openness-1.08)/1.35,0,1);
+        targetSpread=.32 + open*1.1;
+        targetZoom=1;
+        targetYaw=particleRoot.rotation.y;
+        targetPitch=0;
+        setGestureStatus(open>.52 ? '手掌张开 · 扩散' : (open<.24 ? '握拳 · 聚合' : '手掌收放'));
+      }
+    }
+
+    async function startCamera() {
+      const btn=document.querySelector('#cameraBtn'), btnText=document.querySelector('#cameraBtnText');
+      if (cameraActive) {
+        cameraActive=false;
+        if (handsTask) { handsTask.close(); handsTask=null; }
+        handSending=false;
+        if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop());
+        cameraStream=null; pointMode=false; targetSpread=1; targetZoom=1; targetYaw=0; targetPitch=0;
+        document.querySelector('#cameraVideo').srcObject=null;
+        drawHandOverlay(null);
+        document.querySelector('#cameraPreview').classList.remove('visible');
+        btn.classList.remove('active'); btnText.textContent='开启手势'; setGestureStatus('待连接',false);
+        return;
+      }
+      if (!navigator.mediaDevices?.getUserMedia) {
+        showToast('此浏览器环境无法访问摄像头；请使用 localhost 或 HTTPS 打开页面。'); return;
+      }
+      btn.disabled=true; btnText.textContent='正在启动…';
+      try {
+        const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false});
+        cameraStream=stream;
+        const preview=document.querySelector('#cameraPreview');
+        const previewVideo=document.querySelector('#cameraVideo');
+        previewVideo.srcObject=stream;
+        await previewVideo.play();
+        preview.classList.add('visible');
+        await loadHandsLibrary();
+        const hands=new window.Hands({locateFile:file=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/${file}`});
+        hands.setOptions({maxNumHands:1,modelComplexity:0,minDetectionConfidence:.4,minTrackingConfidence:.4});
+        hands.onResults(results=>{
+          if (!cameraActive) return;
+          handResultSeen=true; handStallNotified=false;
+          const landmarks=results.multiHandLandmarks?.[0] || null;
+          drawHandOverlay(landmarks);
+          if (landmarks) processHand(landmarks);
+          else { pointMode=false; targetSpread=1; targetZoom=1; targetYaw=particleRoot.rotation.y; targetPitch=0; setGestureStatus('寻找手掌…（手掌对准画面）'); }
+        });
+        handsTask=hands;
+        handFailureShown=false; handResultSeen=false; handStallNotified=false; handStartAt=performance.now();
+        cameraActive=true;
+        btn.classList.add('active'); btnText.textContent='关闭手势'; setGestureStatus('寻找手掌…');
+        showToast('手势已就绪：张合控制聚散，单指控制旋转与远近。');
+      } catch (error) {
+        cameraActive=false;
+        if (handsTask) { try { handsTask.close(); } catch {} handsTask=null; }
+        if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop());
+        cameraStream=null;
+        document.querySelector('#cameraVideo').srcObject=null;
+        drawHandOverlay(null);
+        document.querySelector('#cameraPreview').classList.remove('visible');
+        const message=error?.name==='NotAllowedError' ? '摄像头权限未开启，请在浏览器地址栏授权后重试。' : '摄像头或手势模型启动失败，请检查网络与浏览器权限。';
+        showToast(message); setGestureStatus('待连接',false);
+      } finally { btn.disabled=false; if(!cameraActive) btnText.textContent='开启手势'; }
+    }
+    document.querySelector('#cameraBtn').addEventListener('click',startCamera);
+    document.querySelector('#fullscreenBtn').addEventListener('click', async () => {
+      try { if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }
+      catch { showToast('当前浏览器不支持全屏操作。'); }
+    });
+    document.addEventListener('fullscreenchange',()=>{
+      const b=document.querySelector('#fullscreenBtn');
+      b.title=document.fullscreenElement?'退出全屏':'全屏'; b.setAttribute('aria-label',b.title);
+    });
+
+    canvas.addEventListener('pointerdown', e => { pointerDown=true; lastPointerX=e.clientX; lastPointerY=e.clientY; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove', e => {
+      if(!pointerDown) return;
+      pointerYaw+=(e.clientX-lastPointerX)*.006; pointerPitch=clamp(pointerPitch+(e.clientY-lastPointerY)*.005,-.85,.85);
+      lastPointerX=e.clientX; lastPointerY=e.clientY;
+      if(!cameraActive) { targetYaw=pointerYaw; targetPitch=pointerPitch; }
+    });
+    canvas.addEventListener('pointerup',()=>pointerDown=false);
+    canvas.addEventListener('pointercancel',()=>pointerDown=false);
+    canvas.addEventListener('wheel', e => { if(!cameraActive) targetZoom=clamp(targetZoom*Math.exp(-e.deltaY*.001),.55,1.8); }, {passive:true});
+    window.addEventListener('resize',()=>{
+      camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2)); renderer.setSize(window.innerWidth,window.innerHeight);
+      particleMaterial.uniforms.uPixelRatio.value=renderer.getPixelRatio();
+    });
+
+    let previousTime=performance.now();
+    renderer.setAnimationLoop(now=>{
+      const dt=Math.min(.05,(now-previousTime)/1000); previousTime=now;
+      particleMaterial.uniforms.uTime.value=now*.001;
+      if(cameraActive && handsTask && !handSending && now-lastScan>48) {
+        lastScan=now;
+        const video=document.querySelector('#cameraVideo');
+        if(video.readyState>=2 && video.videoWidth>0 && video.videoHeight>0) {
+          handSending=true;
+          Promise.resolve().then(()=>handsTask?.send({image:video}))
+            .catch(error=>{
+              setGestureStatus('识别模型出错');
+              if (!handFailureShown) {
+                handFailureShown=true;
+                const detail=String(error?.message||error||'未知错误').slice(0,110);
+                showToast(`手势模型运行失败：${detail}`);
+              }
+            })
+            .finally(()=>{handSending=false;});
+        }
+      }
+      if(cameraActive && !handResultSeen && !handStallNotified && now-handStartAt>12000) {
+        handStallNotified=true;
+        setGestureStatus('模型加载超时 · 检查网络');
+        showToast('手势模型还未返回结果。请检查网络是否能访问 jsDelivr，然后关闭并重新开启手势。');
+      }
+      if(!cameraActive && !pointerDown) targetYaw += dt*.07;
+      currentSpread=lerp(currentSpread,targetSpread,1-Math.exp(-dt*5.5));
+      currentZoom=lerp(currentZoom,targetZoom,1-Math.exp(-dt*5));
+      particleRoot.rotation.y += (targetYaw-particleRoot.rotation.y)*(1-Math.exp(-dt*4.3));
+      particleRoot.rotation.x += (targetPitch-particleRoot.rotation.x)*(1-Math.exp(-dt*4.3));
+      particleRoot.scale.setScalar(currentSpread*currentZoom);
+      const arr=geometry.attributes.position.array;
+      const t=now*.001;
+      for(let i=0;i<COUNT;i++) {
+        const k=i*3, phase=seeds[i];
+        const flow=.012 + .018*(1-currentSpread);
+        const tx=targets[k] + Math.sin(t*.55+phase)*flow;
+        const ty=targets[k+1] + Math.cos(t*.48+phase*1.7)*flow;
+        const tz=targets[k+2] + Math.sin(t*.42+phase*2.3)*flow;
+        const ease=1-Math.exp(-dt*(currentSpread<.5?3.4:4.4));
+        arr[k]+=(tx-arr[k])*ease; arr[k+1]+=(ty-arr[k+1])*ease; arr[k+2]+=(tz-arr[k+2])*ease;
+      }
+      geometry.attributes.position.needsUpdate=true;
+      dust.rotation.y=now*.000018;
+      renderer.render(scene,camera);
+    });
+  </script>
+</body>
+</html>
+
