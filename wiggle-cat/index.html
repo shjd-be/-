@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#faf7ef">
+<meta name="description" content="点击小猫，让它扭扭屁股。六只不同花色的卡通小猫，承包你今天的小快乐。">
+<title>小猫扭扭 · 快乐就是这么一扭</title>
+<style>
+:root{--bg:#faf7ef;--ink:#324536;--muted:#939184;--orange:#dc8359;--line:#e7e3d6;--fur:#e7a461;--fur-light:#f6c58b;--fur-shadow:#ce8644;--stripe:#bc743c;--ear:#edb2a0;--sock:#f8ddb2;--outline:#9b6037;--blob:#f2e3cb}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--ink);font:14px "Microsoft YaHei","PingFang SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:3px solid #dc8359;outline-offset:5px}button:disabled{cursor:default}svg{display:block}::selection{background:#dce3c9}.app{max-width:1600px;min-height:100svh;display:flex;flex-direction:column;margin:0 auto;padding:0 6.3%}header{height:98px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:16px}.brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink)}.brand-icon{width:43px;height:43px;background:var(--ink);border-radius:15px;display:grid;place-items:center;transform:rotate(-7deg)}.brand-name{font-weight:900;font-size:19px;letter-spacing:1px}.brand-en{display:block;font-size:8px;letter-spacing:2.2px;margin-top:4px;font-weight:600}.header-right{display:flex;align-items:center;gap:25px}.tiny-note{display:flex;gap:7px;align-items:center;font-size:11px;color:#7b806e}.status-dot{width:6px;height:6px;border-radius:100%;background:#819169}.sound{background:transparent;border:1px solid var(--line);border-radius:50%;width:37px;height:37px;display:grid;place-items:center}.sound:hover{background:#eeeee2}.sound[aria-pressed="true"]{background:#e7ebde;border-color:#b7c3a6}.sound svg{width:16px;height:16px}.sound .on{display:none}.sound[aria-pressed="true"] .on{display:block}.sound[aria-pressed="true"] .off{display:none}
+.scene{position:relative;min-height:600px;flex:1;isolation:isolate}.intro{position:absolute;top:76px;left:3.5%;z-index:3;pointer-events:none}.eyebrow{font-size:10px;letter-spacing:2.4px;font-weight:600;color:var(--orange);margin:0 0 21px;display:flex;align-items:center;gap:10px}.eyebrow:before{content:"";width:23px;height:1px;background:var(--orange)}h1{font-size:clamp(40px,4.5vw,67px);line-height:1.27;letter-spacing:-2.5px;font-weight:900;margin:0}h1 .wiggle-word{display:inline-block;transform:rotate(-4deg);color:var(--orange);position:relative}h1 .wiggle-word:after{content:"";position:absolute;bottom:-9px;left:-2px;right:-4px;height:10px;border-top:2px solid var(--orange);border-radius:50%;transform:rotate(-2deg)}.intro-copy{font-size:12px;line-height:2;color:#8e8c7d;margin:23px 0 0}.tap-tag{margin-top:27px;display:inline-flex;gap:8px;align-items:center;font-size:11px;border:1px dashed #b8c0a5;padding:9px 14px;border-radius:24px;color:#6d7b5a;transform:rotate(-3deg)}
+.pet-area{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;-webkit-tap-highlight-color:transparent;overflow:hidden;cursor:pointer}.pet-area:focus-visible{outline-offset:-6px;border-radius:24px}.backdrop{position:absolute;left:43%;top:9%;width:48%;height:75%;background:var(--blob);border-radius:49% 51% 43% 57% / 53% 46% 54% 47%;transform:rotate(-10deg);opacity:.7;transition:background .5s}.backdrop:after{content:"";position:absolute;inset:-15px;border:1px solid #d7cbb660;border-radius:46% 54% 48% 52% / 50% 49% 51% 50%;transform:rotate(16deg)}.cat-wrap{position:absolute;width:min(53%,630px);height:100%;left:39%;top:0;display:grid;align-items:center;justify-items:center}.cat-illustration{width:100%;max-height:100%;overflow:visible;animation:breathe 5s ease-in-out infinite;filter:drop-shadow(0 7px 1px #9a714008)}@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}.fur{fill:url(#fur-gradient)}.fur-solid{fill:var(--fur)}.fur-shadow{fill:var(--fur-shadow)}.stripe{fill:var(--stripe)}.sock{fill:var(--sock)}.ear{fill:var(--ear)}.cat-line{stroke:var(--outline);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:.46}.type-patches{display:none}body[data-cat="calico"] .calico-patches,body[data-cat="siamese"] .siamese-patches,body[data-cat="tuxedo"] .tuxedo-patches{display:inline}body[data-cat="calico"] .tabby,body[data-cat="white"] .tabby,body[data-cat="siamese"] .tabby,body[data-cat="tuxedo"] .tabby{display:none}.tail-stroke{stroke:var(--fur);stroke-width:46;stroke-linecap:round;fill:none}.tail-outline{stroke:var(--outline);stroke-width:51;opacity:.22;fill:none;stroke-linecap:round}.tail-tip{stroke:var(--stripe);stroke-width:46;stroke-linecap:round;fill:none}.wiggle-lines{opacity:0;transition:opacity .12s}.is-wiggling .wiggle-lines{opacity:.7}.is-wiggling .cat-illustration{animation-play-state:paused}.ground{transition:fill .4s}.decor{position:absolute;pointer-events:none;color:#87916d}.star-one{left:43%;top:18%;font-size:24px;transform:rotate(10deg)}.star-two{right:4%;top:56%;font-size:38px;color:#c68f69}.star-three{left:43%;bottom:21%;font-size:16px}.label-side{position:absolute;right:2.6%;top:23%;transform:rotate(9deg);color:#84906f;font-size:12px;pointer-events:none;line-height:1.7}.label-side span{display:block;text-align:center;font-size:30px;font-family:Georgia,serif;margin-top:2px;transform:rotate(10deg)}.floor-caption{position:absolute;bottom:28px;left:52%;font-size:9px;letter-spacing:2px;color:#aba492;pointer-events:none}.counter{position:absolute;left:4%;bottom:59px;pointer-events:none}.counter-label{font-size:10px;color:#93917e;letter-spacing:1px;margin-bottom:6px}.counter-number{font-size:43px;font-family:Georgia,"Times New Roman",serif;font-style:italic;color:#536246;letter-spacing:-2px;display:inline-block;line-height:1}.counter-unit{font-size:10px;margin-left:6px;color:#93917e}.bubble{position:absolute;z-index:5;left:61%;top:7%;max-width:230px;transform:translate(-50%,8px) rotate(-4deg);padding:12px 18px;border-radius:14px 14px 14px 3px;background:#fffdf7;box-shadow:0 4px 15px #66573708;border:1px solid #e3dece;font-size:12px;color:#716a53;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap}.bubble.visible{opacity:1;transform:translate(-50%,0) rotate(-4deg)}.floater{position:absolute;z-index:4;pointer-events:none;font-size:21px;animation:float-up .9s ease-out forwards;line-height:1;color:#b77d58}@keyframes float-up{0%{opacity:0;transform:translate(-50%,0) rotate(-12deg) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--drift)), -100px) rotate(18deg) scale(1.2)}}
+.control-zone{position:relative;z-index:7;padding:0 0 28px}.control-bar{max-width:810px;margin:auto;background:#fffdf7;border:1px solid #e7e2d5;border-radius:21px;min-height:101px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 9px 35px #77624305}.cat-info{min-width:116px}.cat-kicker{font-size:9px;letter-spacing:1.5px;color:#9c9888;display:flex;align-items:center;gap:7px}.cat-kicker:before{content:"";width:5px;height:5px;background:#93a274;border-radius:100%}.cat-name{font-weight:800;font-size:20px;margin:5px 0 0;letter-spacing:.5px}.cat-name small{font-size:10px;color:#92917f;font-weight:400;margin-left:8px;letter-spacing:0}.cats{display:flex;gap:11px;align-items:center}.cat-choice{height:38px;width:38px;border-radius:50%;padding:4px;border:1px solid transparent;background:transparent;position:relative}.cat-choice:hover{background:#f2eee3}.cat-choice[aria-pressed="true"]{border-color:#74835f}.coat-dot{display:block;width:28px;height:28px;border-radius:50%;background:var(--coat);box-shadow:inset 0 0 0 1px #00000008}.cat-choice[aria-pressed="true"]:after{content:"";position:absolute;bottom:-9px;left:50%;width:3px;height:3px;border-radius:100%;background:var(--ink);transform:translateX(-50%)}.next-cat{display:flex;align-items:center;justify-content:center;gap:18px;min-height:45px;padding:12px 20px;border:0;border-radius:11px;background:var(--ink);color:#fffdf7;font-size:12px;white-space:nowrap;transition:background .15s,transform .15s}.next-cat:hover{background:#455d3d;transform:translateY(-1px)}.next-cat .arrow{font-size:19px;line-height:12px;font-weight:400}.hint{font-size:10px;color:#a29d8b;text-align:center;letter-spacing:.4px;margin:16px 0 0}.hint kbd{font:9px ui-monospace,monospace;background:#eeeadf;border:1px solid #e4dfd2;border-radius:4px;padding:2px 5px;color:#8a8979;margin:0 3px}footer{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid var(--line);min-height:57px;color:#aaa593;font-size:9px;letter-spacing:.4px}footer span:last-child{letter-spacing:1.5px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.scene{overflow:clip}.bubble{width:max-content;max-width:min(230px,calc(100% - 24px));white-space:normal;text-align:center}
+@media(min-width:1600px){.scene{min-height:690px}.intro{top:105px}.cat-wrap{width:630px;left:39%}}
+@media(max-width:1050px){.app{padding:0 5%}.scene{min-height:560px}.intro{left:1%;top:75px}h1{font-size:49px}.cat-wrap{width:60%;left:36%;top:20px}.backdrop{left:43%;top:17%;height:67%;width:52%}.label-side{right:0;top:22%}.counter{left:2%;bottom:42px}.star-one{left:42%;top:28%}.floor-caption{bottom:20px;left:54%}.bubble{left:68%;top:14%}.control-bar{max-width:760px;padding:18px 22px;gap:12px}.cats{gap:6px}.cat-info{min-width:112px}.next-cat{padding:12px 17px}.star-two{right:1%}}
+@media(max-width:700px){.app{padding:0 22px}header{height:78px}.brand-icon{width:35px;height:35px;border-radius:12px}.brand-name{font-size:16px}.brand-en{font-size:7px;letter-spacing:1.6px}.header-right{gap:13px}.tiny-note{font-size:9px}.sound{width:34px;height:34px}.scene{min-height:640px}.intro{top:30px;left:3%;width:92%;text-align:center}.eyebrow{justify-content:center;font-size:8px;margin-bottom:11px;letter-spacing:1.7px}.eyebrow:before{width:16px}h1{font-size:39px;line-height:1.33;letter-spacing:-1.5px}h1 br{display:none}.intro-copy{font-size:11px;margin-top:17px;line-height:1.8}.intro-copy br{display:none}.tap-tag{display:none}.cat-wrap{top:137px;left:1%;width:98%;height:470px}.backdrop{left:9%;top:30%;width:84%;height:58%}.star-one{left:8%;top:40%;font-size:22px}.star-two{right:3%;top:64%;font-size:29px}.star-three{left:13%;bottom:15%}.label-side{right:2%;top:31%;font-size:10px;transform:rotate(12deg)}.label-side span{font-size:23px}.counter{left:4%;bottom:20px}.counter-label{font-size:8px;margin-bottom:5px}.counter-number{font-size:30px}.counter-unit{font-size:9px}.floor-caption{left:auto;right:4%;bottom:25px;font-size:8px;letter-spacing:1.3px}.bubble{left:48%;top:35%;font-size:11px;padding:9px 14px}.control-zone{padding-bottom:23px}.control-bar{display:grid;grid-template-columns:1fr auto;gap:18px 12px;padding:18px 20px;border-radius:18px;min-height:147px}.cat-info{grid-column:1}.cat-kicker{font-size:8px}.cat-name{font-size:18px}.cat-name small{font-size:9px}.cats{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:4px;padding:0 1px 5px}.cat-choice{height:36px;width:36px;padding:4px}.coat-dot{height:26px;width:26px}.next-cat{grid-column:2;grid-row:1;min-height:40px;padding:10px 16px;font-size:11px;gap:14px}.hint{font-size:9px;margin-top:14px}.desktop-hint{display:none}footer{min-height:57px;font-size:8px;gap:10px}footer span:last-child{font-size:7px;letter-spacing:1px}}
+@media(max-width:370px){.app{padding:0 16px}.tiny-note{display:none}.scene{min-height:584px}.cat-wrap{top:128px;height:425px}.backdrop{top:32%;height:55%}.intro{top:28px}h1{font-size:34px}.intro-copy{font-size:10px}.eyebrow{font-size:7px}.counter{bottom:16px}.floor-caption{bottom:19px;font-size:7px}.bubble{top:32%}.control-bar{padding:16px}.hint{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.floater{display:none}}
+</style>
+</head>
+<body data-cat="orange">
+<div class="app">
+<header><a class="brand" href="#" aria-label="小猫扭扭首页"><span class="brand-icon"><svg width="27" height="27" viewBox="0 0 50 50" aria-hidden="true"><path fill="#faf7ef" d="M13 22 10 9 21 14Q26 11 31 14L41 9 38 24Q45 33 38 42H13Q6 33 13 22Z"/><path d="M27 36Q36 27 29 22Q24 19 24 24" stroke="#324536" stroke-width="5" fill="none" stroke-linecap="round"/></svg></span><span class="brand-name">小猫扭扭<span class="brand-en">THE WIGGLE CLUB</span></span></a><div class="header-right"><span class="tiny-note"><i class="status-dot"></i> 今日正常营业</span><button class="sound" id="sound" type="button" aria-label="开启音效" aria-pressed="false" title="开启音效"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 8h3l4-4v12l-4-4H3Z" stroke-linejoin="round"/><path class="off" d="m14 8 4 4m0-4-4 4"/><path class="on" d="M13 7q4 3 0 6m3-9q6 6 0 12" stroke-linecap="round"/></svg></button></div></header>
+<main class="scene" id="scene">
+  <button class="pet-area" id="pet" type="button" aria-label="点击橘子，让小猫扭屁股" aria-describedby="play-hint">
+    <span class="backdrop" aria-hidden="true"></span>
+    <span class="cat-wrap" aria-hidden="true">
+      <svg class="cat-illustration" viewBox="0 0 660 700" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="fur-gradient" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="var(--fur-light)"/><stop offset="1" stop-color="var(--fur)"/></linearGradient><radialGradient id="rump-light" cx=".37" cy=".2" r=".9"><stop stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="body-clip"><path d="M253 316C213 345 189 391 174 467C156 516 145 571 177 610C203 646 252 647 328 644C404 647 454 646 480 610C512 571 501 516 483 467C468 391 444 345 404 316Z"/></clipPath><mask id="tail-mask" maskUnits="userSpaceOnUse" x="280" y="100" width="260" height="430"><path d="M332 491C319 431 378 415 414 361C456 303 493 246 490 190C489 155 462 135 442 150" stroke="white" stroke-width="46" stroke-linecap="round" fill="none"/></mask></defs>
+        <ellipse class="ground" cx="330" cy="655" rx="178" ry="17" fill="#86724f" opacity=".12"/>
+        <ellipse cx="330" cy="657" rx="124" ry="8" fill="#86724f" opacity=".07"/>
+        <g id="head">
+          <path class="fur" d="M235 304C211 283 204 247 219 219L203 164Q202 150 216 158L271 195Q326 176 381 195L432 158Q447 151 445 168L435 222C450 250 442 284 418 305Q330 345 235 304Z"/>
+          <path class="ear" d="m218 173 9 50 31-22Z"/><path class="ear" d="m430 175-8 49-29-22Z"/>
+          <path class="cat-line" d="M224 227q-9 18-6 31m216-27q10 23 3 43"/>
+          <g class="tabby stripe" opacity=".62"><path d="M289 193q11 30 14 45 9-27 6-49Z"/><path d="M320 188q-2 31 8 47 11-23 9-47Z"/><path d="M351 190q-4 26 2 46 12-18 17-43Z"/></g>
+          <g class="type-patches calico-patches"><path d="M235 304C211 283 204 247 219 219L203 164Q202 150 216 158L271 195Q295 220 273 251Q264 279 283 315Z" fill="#4c4846"/><path d="M380 195 432 158Q447 151 445 168L435 222Q451 249 439 276C404 286 389 251 380 195Z" fill="#d99b60"/><path class="ear" d="m218 173 9 50 31-22Zm212 2-8 49-29-22Z"/></g>
+          <g class="type-patches siamese-patches"><path d="M235 304C211 283 204 247 219 219L203 164Q202 150 216 158L271 195Q326 176 381 195L432 158Q447 151 445 168L435 222C450 250 442 284 418 305Q330 345 235 304Z" fill="#726257"/><path class="ear" d="m218 173 9 50 31-22Zm212 2-8 49-29-22Z"/></g>
+          <path class="cat-line" d="M241 286q12 8 26 9m124 0q15-2 25-10"/>
+          <path d="m216 267-24-4m24 13-22 5m246-14 23-4m-24 13 22 6" class="cat-line" opacity=".4"/>
+        </g>
+        <g id="feet">
+          <path class="sock" d="M221 582C193 585 183 615 194 636Q214 655 263 642Q276 621 263 599Z"/><path class="sock" d="M436 582C464 585 474 615 463 636Q443 655 394 642Q381 621 394 599Z"/>
+          <path class="cat-line" d="m213 630 1 11m15-10 1 12m214-13-1 11m-15-10-1 12" opacity=".45"/>
+        </g>
+        <g id="hips">
+          <path class="fur" d="M253 316C213 345 189 391 174 467C156 516 145 571 177 610C203 646 252 647 328 644C404 647 454 646 480 610C512 571 501 516 483 467C468 391 444 345 404 316Z"/>
+          <g clip-path="url(#body-clip)">
+            <ellipse cx="249" cy="549" rx="91" ry="91" fill="var(--fur-shadow)" opacity=".13"/><ellipse cx="419" cy="549" rx="91" ry="91" fill="var(--fur-shadow)" opacity=".13"/>
+            <g class="tabby stripe" opacity=".62"><path d="M174 404q66 14 83 37-64-6-91-15Zm-15 63q67 5 82 27-64 2-83-8Zm-8 66q57-1 77 20-57 10-78-1ZM486 404q-66 14-83 37 64-6 91-15Zm15 63q-67 5-82 27 64 2 83-8Zm8 66q-57-1-77 20 57 10 78-1Z"/><path d="M296 314q-2 43 10 68 10-37 5-65Zm30 1q-1 51 10 71 11-35 6-70Zm31-2q-7 42 4 69 11-24 14-67Z"/></g>
+            <g class="type-patches calico-patches"><path d="M169 449C167 371 196 309 258 309C298 318 273 356 260 373C239 400 257 436 225 459Q189 477 169 449Z" fill="#d99b60"/><path d="M469 408C421 399 389 436 396 477C401 505 434 524 461 507L514 482Z" fill="#4c4846"/><path d="M169 540C197 510 226 538 232 565C246 594 217 629 182 632Z" fill="#d99b60"/></g>
+            <g class="type-patches tuxedo-patches"><path fill="#f7f2e7" d="M282 600q48-29 96 0l18 62H264Z"/><ellipse cx="273" cy="391" rx="14" ry="9" fill="#f8f3e7" opacity=".12"/></g>
+            <g class="type-patches siamese-patches"><ellipse cx="193" cy="589" rx="56" ry="49" fill="#726257" opacity=".24"/><ellipse cx="469" cy="589" rx="56" ry="49" fill="#726257" opacity=".24"/></g>
+            <ellipse cx="331" cy="473" rx="174" ry="181" fill="url(#rump-light)"/>
+          </g>
+          <path class="cat-line" d="M241 479C207 483 198 519 204 550M419 479C453 483 462 519 456 550" opacity=".4"/>
+          <path class="cat-line" d="M330 570q-6 32 0 56" opacity=".27"/>
+          <g id="tail">
+            <path class="tail-outline" d="M332 491C319 431 378 415 414 361C456 303 493 246 490 190C489 155 462 135 442 150"/>
+            <path class="tail-stroke" d="M332 491C319 431 378 415 414 361C456 303 493 246 490 190C489 155 462 135 442 150"/>
+            <path class="tail-tip" d="M490 190C489 155 462 135 442 150"/>
+            <g class="tabby" stroke="var(--stripe)" fill="none" stroke-width="17" opacity=".65" mask="url(#tail-mask)"><path d="m456 287 39 18m-68 23 36 26m-70 13 32 34m-72-1 29 34"/></g>
+            <path d="M336 480q-5-25 6-41" stroke="var(--fur-light)" stroke-width="8" stroke-linecap="round" fill="none" opacity=".4"/>
+          </g>
+        </g>
+        <g class="wiggle-lines" stroke="var(--stripe)" stroke-width="4" stroke-linecap="round" fill="none"><path d="M133 456q-16 25-12 48m-8-58q-19 29-14 55M529 456q16 25 12 48m8-58q19 29 14 55"/></g>
+      </svg>
+    </span>
+  </button>
+  <div class="intro"><p class="eyebrow">SMALL CAT. BIG WIGGLE ENERGY.</p><h1>请勿打扰，<br>正在<span class="wiggle-word">扭扭。</span></h1><p class="intro-copy">生活偶尔有点累，<br>不如看小猫扭个屁股再说。</p><span class="tap-tag"><span aria-hidden="true">☞</span> 戳戳小猫，接收快乐</span></div>
+  <span class="decor star-one" aria-hidden="true">✳</span><span class="decor star-two" aria-hidden="true">✧</span><span class="decor star-three" aria-hidden="true">✦</span>
+  <span class="label-side" aria-hidden="true">这边是快乐开关<span>↙</span></span>
+  <div class="counter"><div class="counter-label">已为你扭走烦恼</div><span class="counter-number" id="count">000</span><span class="counter-unit">次</span></div>
+  <span class="floor-caption" aria-hidden="true">100% CUTE · 0% SERIOUS</span>
+  <div class="bubble" id="bubble" aria-hidden="true">收到！扭给你看。</div>
+  <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
+</main>
+<section class="control-zone" aria-label="切换小猫">
+  <div class="control-bar"><div class="cat-info"><div class="cat-kicker">今日当值 / ON DUTY</div><h2 class="cat-name"><span id="cat-name">橘子</span><small id="cat-description">干饭型选手</small></h2></div><div class="cats" id="cats" role="group" aria-label="选择小猫花色"></div><button class="next-cat" id="next" type="button">换一只小猫 <span class="arrow" aria-hidden="true">↗</span></button></div>
+  <p class="hint" id="play-hint">点小猫扭屁股，点色块换小猫。<span class="desktop-hint">也可以用 <kbd>Space</kbd> 扭扭，<kbd>←</kbd><kbd>→</kbd> 换猫。</span></p>
+</section>
+<footer><span>这里不解决烦恼，但可以陪你放空一会儿。</span><span>ALL BUTTS ARE CUTE.</span></footer>
+</div>
+<script>
+'use strict';
+const CATS=[
+ {id:'orange',name:'橘子',description:'干饭型选手',coat:'#eab078',colors:{fur:'#e7a461','fur-light':'#f6c58b','fur-shadow':'#ce8644',stripe:'#bc743c',ear:'#edb2a0',sock:'#f8ddb2',outline:'#9b6037',blob:'#f2e3cb'}},
+ {id:'calico',name:'花卷',description:'花色不重样',coat:'conic-gradient(#d99b60 0deg 120deg,#f1e9dc 120deg 240deg,#4c4846 240deg)',colors:{fur:'#eee7d9','fur-light':'#fcf7ed','fur-shadow':'#c8ba9f',stripe:'#b77c49',ear:'#e3b1a3',sock:'#fbf5e9',outline:'#a18d72',blob:'#e7e6d6'}},
+ {id:'gray',name:'芝麻',description:'扭扭很有分寸',coat:'#a1a6ac',colors:{fur:'#9da5ab','fur-light':'#c1c8cb','fur-shadow':'#7f8992',stripe:'#66717e',ear:'#d5a8aa',sock:'#cdd1cf',outline:'#68727c',blob:'#e1e7e8'}},
+ {id:'white',name:'年糕',description:'软乎乎一小团',coat:'#f1ede4',colors:{fur:'#eee9df','fur-light':'#fffdf5','fur-shadow':'#c5bcab',stripe:'#c6b8a4',ear:'#edc0b2',sock:'#fffaf0',outline:'#b4a692',blob:'#eee2dc'}},
+ {id:'tuxedo',name:'煤球',description:'穿西装也要扭',coat:'linear-gradient(140deg,#41434b 65%,#f7f2e7 65%)',colors:{fur:'#45464e','fur-light':'#666773','fur-shadow':'#292c35',stripe:'#353741',ear:'#c99899',sock:'#f7f2e7',outline:'#242832',blob:'#e4e3ea'}},
+ {id:'siamese',name:'拿铁',description:'自带咖啡拉花',coat:'radial-gradient(circle at 65% 70%,#726257 30%,#e8d5b8 75%)',colors:{fur:'#ddc7a7','fur-light':'#f4e5ca','fur-shadow':'#b39b7b',stripe:'#726257',ear:'#c79f94',sock:'#807064',outline:'#8f775e',blob:'#eadfcf'}}
+];
+const $=id=>document.getElementById(id);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let active=0,count=0,soundOn=false,audio=null,energy=0,phase=0,previous=0,frame=0,bubbleTimer=0,phraseIndex=0;
+const phrases=['收到！扭给你看。','生活嘛，扭过去就好。','这不是胖，是快乐的形状。','你负责开心，我负责扭。','好的，再来亿次。','烦恼已被尾巴扫走。'];
+try{const stored=Number(localStorage.getItem('wiggle-club-count'));if(Number.isSafeInteger(stored)&&stored>=0&&stored<1e9)count=stored;const id=localStorage.getItem('wiggle-club-cat');const index=CATS.findIndex(cat=>cat.id===id);if(index>=0)active=index;}catch{}
+function store(key,value){try{localStorage.setItem(key,String(value));}catch{}}
+function renderCount(){$('count').textContent=String(count).padStart(3,'0');}
+for(const [index,cat] of CATS.entries()){
+ const button=document.createElement('button');button.type='button';button.className='cat-choice';button.dataset.cat=cat.id;button.setAttribute('aria-label',cat.name+'，'+cat.description);button.setAttribute('aria-pressed','false');button.title=cat.name;
+ const dot=document.createElement('span');dot.className='coat-dot';dot.style.setProperty('--coat',cat.coat);dot.setAttribute('aria-hidden','true');button.append(dot);button.addEventListener('click',()=>setCat(index,true));$('cats').append(button);
+}
+function resetPose(){for(const id of ['hips','head','tail'])$(id).removeAttribute('transform');$('scene').classList.remove('is-wiggling');}
+function stopWiggle(){if(frame)cancelAnimationFrame(frame);frame=0;energy=0;previous=0;phase=0;resetPose();}
+function setCat(index,announce=false){
+ stopWiggle();active=(index+CATS.length)%CATS.length;const cat=CATS[active];document.body.dataset.cat=cat.id;
+ for(const [key,value] of Object.entries(cat.colors))document.documentElement.style.setProperty('--'+key,value);
+ $('cat-name').textContent=cat.name;$('cat-description').textContent=cat.description;$('pet').setAttribute('aria-label','点击'+cat.name+'，让小猫扭屁股');
+ $('cats').querySelectorAll('button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===active)));store('wiggle-club-cat',cat.id);
+ if(announce){showBubble('换班啦，今天是'+cat.name+'！');$('announcement').textContent='已切换为'+cat.name+'，'+cat.description;}
+}
+function showBubble(text){clearTimeout(bubbleTimer);$('bubble').textContent=text;$('bubble').classList.add('visible');bubbleTimer=setTimeout(()=>$('bubble').classList.remove('visible'),2000);}
+function animate(time){
+ if(document.hidden){stopWiggle();return;}
+ const dt=previous?Math.min((time-previous)/1000,.045):1/60;previous=time;phase+=dt*18;energy=Math.max(0,energy-dt*.88);
+ const scale=reduced.matches ? .15 : 1,angle=Math.sin(phase)*energy*10*scale,shift=Math.sin(phase)*energy*9*scale;
+ $('hips').setAttribute('transform',`translate(${shift.toFixed(3)} 0) rotate(${angle.toFixed(3)} 330 380)`);
+ $('head').setAttribute('transform',`rotate(${(-angle*.22).toFixed(3)} 330 300)`);
+ $('tail').setAttribute('transform',`rotate(${(Math.sin(phase-1)*energy*14*scale).toFixed(3)} 332 491)`);
+ if(energy>.01)frame=requestAnimationFrame(animate);else{frame=0;previous=0;resetPose();}
+}
+function addSpark(){
+ if(reduced.matches||$('scene').querySelectorAll('.floater').length>=10)return;
+ const svg=$('pet').querySelector('svg').getBoundingClientRect(),scene=$('scene').getBoundingClientRect();
+ const spark=document.createElement('span');spark.className='floater';spark.setAttribute('aria-hidden','true');spark.textContent=['♡','✦','♪'][count%3];spark.style.left=(svg.left-scene.left+svg.width*(.35+Math.random()*.3))+'px';spark.style.top=(svg.top-scene.top+svg.height*.65)+'px';spark.style.setProperty('--drift',(Math.random()*70-35)+'px');$('scene').append(spark);spark.addEventListener('animationend',()=>spark.remove(),{once:true});setTimeout(()=>spark.remove(),1200);
+}
+async function playSound(){
+ if(!soundOn)return;
+ try{
+  const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw new Error('Audio unavailable');
+  if(!audio)audio=new Audio();if(audio.state==='suspended')await audio.resume();
+  const oscillator=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;oscillator.type='sine';const note=[523.25,659.25,783.99,880][count%4];oscillator.frequency.setValueAtTime(note,now);oscillator.frequency.exponentialRampToValueAtTime(note*.75,now+.16);gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(.09,now+.008);gain.gain.exponentialRampToValueAtTime(.001,now+.24);oscillator.connect(gain);gain.connect(audio.destination);oscillator.start(now);oscillator.stop(now+.25);oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();};
+ }catch{soundOn=false;renderSound();showBubble('音效暂不可用，安静扭扭也开心。');}
+}
+function wiggle(){count=Math.min(count+1,999999999);renderCount();store('wiggle-club-count',count);energy=Math.min(energy+.95,1.45);$('scene').classList.add('is-wiggling');if(!frame){previous=0;phase=0;frame=requestAnimationFrame(animate);}showBubble(phrases[phraseIndex++%phrases.length]);$('announcement').textContent=CATS[active].name+'扭了扭屁股，累计'+count+'次。';addSpark();void playSound();}
+function renderSound(){$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').setAttribute('aria-label',soundOn?'关闭音效':'开启音效');$('sound').title=soundOn?'关闭音效':'开启音效';}
+$('pet').addEventListener('click',wiggle);$('next').addEventListener('click',()=>setCat(active+1,true));$('sound').addEventListener('click',()=>{soundOn=!soundOn;renderSound();if(soundOn)void playSound();});
+document.addEventListener('keydown',event=>{
+ if(event.altKey||event.ctrlKey||event.metaKey||event.isComposing)return;
+ if(event.target!==document.body&&event.target!==$('pet'))return;
+ if(event.code==='Space'&&event.target===document.body){event.preventDefault();if(!event.repeat)wiggle();}
+ if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();if(!event.repeat)setCat(active+(event.key==='ArrowRight'?1:-1),true);}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopWiggle();});
+setCat(active);renderCount();
+</script>
+</body>
+</html>
