@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f5ed">
+<meta name="description" content="今天吃什么，便便什么色？选择今日菜单，制作一张有点离谱又有点知识的趣味便便色卡。">
+<title>便便色卡 · 今天吃什么，明天什么色？</title>
+<style>
+:root{--paper:#f7f5ed;--ink:#30382c;--muted:#7c8071;--green:#405b37;--line:#e1e2d5;--orange:#d16b44;--cream:#eeeadc;--poop:#926044;--card:#ebe7d8;--accent:#65452f}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #c66b42;outline-offset:4px}button{touch-action:manipulation}button:disabled{cursor:default}svg{display:block}::selection{background:#dae2c4}.wrap{max-width:1180px;padding:0 36px;margin:auto}
+header{height:91px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;gap:12px;align-items:center;color:var(--ink);text-decoration:none}.brand-mark{height:42px;width:42px;background:var(--green);border-radius:14px;display:grid;place-items:center;transform:rotate(-5deg)}.brand-name{font-size:20px;letter-spacing:1px;font-weight:900}.brand-sub{font-size:9px;letter-spacing:2px;display:block;margin-top:3px;font-weight:600}.header-note{color:var(--muted);font-size:12px;display:flex;align-items:center;gap:9px}.live-dot{height:6px;width:6px;background:#7f9765;border-radius:50%}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;padding:48px 0 33px;gap:24px}.eyebrow{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:2px;display:flex;align-items:center;gap:9px;margin-bottom:15px}.eyebrow:before{content:"";width:22px;height:1px;background:var(--orange)}h1{font-size:clamp(34px,4.3vw,52px);font-weight:900;letter-spacing:-2px;line-height:1.25;margin:0}h1 span{color:var(--green);position:relative;white-space:nowrap}h1 span:after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:7px;border-top:2px solid #aab88a;border-radius:50%;transform:rotate(-2deg)}.hero-copy{color:var(--muted);line-height:1.9;font-size:13px;margin:20px 0 0}.hero-stamp{flex-shrink:0;border:1px solid #b5bea6;border-radius:50%;height:91px;width:91px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform:rotate(11deg);color:var(--green);gap:4px;margin:0 18px 10px 0}.hero-stamp span:first-child{font-size:9px;letter-spacing:2px}.hero-stamp strong{font-size:19px}.hero-stamp span:last-child{font-size:9px;letter-spacing:1px}
+.workspace{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:stretch}.menu-panel{border:1px solid var(--line);border-radius:23px;background:#fffef9;padding:26px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:21px}.step-label{display:flex;align-items:center;gap:9px}.step-number{font-size:11px;background:#ebeddf;color:var(--green);width:24px;height:24px;display:grid;place-items:center;border-radius:50%;font-weight:700}h2{font-size:17px;margin:0;letter-spacing:-.3px}.text-button{border:0;background:transparent;color:var(--muted);font-size:11px;padding:8px 0;display:flex;gap:5px;align-items:center}.text-button:hover{color:var(--green)}.food-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.food{border:1px solid #e9e9df;background:#fafaf5;border-radius:12px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:84px;padding:10px 3px;transition:background .18s,border-color .18s,transform .18s;color:#565d4c}.food:hover{background:#f0f1e5;transform:translateY(-2px)}.food[aria-pressed="true"]{border-color:#7d9369;background:#edf1e3;color:var(--green)}.food-emoji{font-family:"Segoe UI Emoji","Apple Color Emoji",sans-serif;font-size:26px;line-height:1.25;filter:saturate(.83)}.food-name{font-size:11px}.food .check{position:absolute;top:5px;right:6px;background:var(--green);color:white;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center;opacity:0}.food[aria-pressed="true"] .check{opacity:1}
+.custom-label{font-size:11px;color:var(--muted);display:block;margin:19px 0 9px}.input-wrap{position:relative}.input-wrap input{border:1px solid var(--line);background:#fffef9;border-radius:10px;height:43px;width:100%;padding:0 13px;color:var(--ink);font-size:12px}.input-wrap input::placeholder{color:#a1a393}.selection-bar{min-height:37px;display:flex;justify-content:space-between;align-items:center;margin:8px 0 3px;gap:10px;color:var(--muted);font-size:11px}.selection-bar strong{color:var(--green);font-weight:600}.generate{background:var(--green);border:1px solid var(--green);color:#fffef9;width:100%;border-radius:11px;padding:16px 18px;font-size:14px;font-weight:600;display:flex;justify-content:center;align-items:center;gap:15px;transition:background .18s,transform .18s}.generate:hover{background:#30492a;transform:translateY(-1px)}.generate .arrow{font-size:19px;font-weight:400;line-height:15px}.under-button{text-align:center;font-size:10px;color:#969989;margin:10px 0 0}.message{color:#a24e2e;font-size:12px;line-height:1.6;margin:0}.message:empty{display:none}.message:not(:empty){margin-bottom:10px}
+.result-panel{background:var(--card);border-radius:23px;padding:26px 29px 19px;position:relative;overflow:hidden;display:flex;flex-direction:column;transition:background .4s}.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.result-head .step-number{background:#ffffff70}.small-caps{font-size:9px;letter-spacing:2px;opacity:.6;font-weight:600}.art{height:224px;position:relative;display:grid;place-items:center}.poop-svg{width:190px;height:184px;overflow:visible;filter:drop-shadow(0px 12px 0px #5f4b2b0c);transform:rotate(-5deg);transition:transform .4s}.poop-fill{fill:var(--poop);transition:fill .4s}.spark{position:absolute;color:var(--accent);opacity:.65;font-size:24px;user-select:none}.spark.one{top:46px;left:21%}.spark.two{top:105px;right:13%;font-size:34px}.spark.three{bottom:27px;left:13%;font-size:13px}.orbit-note{position:absolute;font-size:10px;color:var(--accent);right:4px;top:42px;transform:rotate(12deg);font-family:"Microsoft YaHei",sans-serif;opacity:.75}.orbit-note:after{content:"↙";display:block;text-align:center;font-size:23px;margin-top:4px}.result-panel.reveal .poop-svg{animation:reveal .6s cubic-bezier(.18,.8,.3,1.3)}@keyframes reveal{0%{transform:translateY(12px) rotate(-10deg) scale(.8)}65%{transform:translateY(-7px) rotate(4deg) scale(1.04)}100%{transform:rotate(-5deg)}}.result-title{text-align:center;font-size:26px;line-height:1.3;letter-spacing:-1px;margin:1px 0 9px;font-weight:900}.result-sub{text-align:center;font-size:12px;color:var(--accent);line-height:1.7;min-height:20px;margin:0}.swatches{display:flex;gap:5px;justify-content:center;margin:19px 0 17px}.swatch{width:31px;height:12px;background:var(--swatch);border-radius:3px;position:relative}.swatch.active:after{content:"";position:absolute;inset:-4px;border:1px solid var(--swatch);border-radius:5px}.explanation{border-top:1px dashed #30382c30;padding-top:17px;margin-top:auto}.explanation-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.explanation-head strong{font-size:11px;letter-spacing:.5px}.hex{font-size:10px;font-family:ui-monospace,Consolas,monospace;color:var(--accent)}.explanation p{font-size:11px;line-height:1.9;color:#666a59;margin:0;min-height:42px}.result-foot{display:flex;align-items:center;justify-content:space-between;margin-top:15px;gap:8px}.result-foot span{font-size:9px;color:#888a79}.save-button{border:1px solid #30382c28;border-radius:7px;background:#ffffff45;padding:7px 10px;color:var(--ink);font-size:10px;display:flex;align-items:center;gap:5px}.save-button:hover{background:#ffffff90}.save-button:disabled{opacity:.4}
+.bottom{margin:26px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;border-bottom:1px solid var(--line);padding-bottom:25px}.fact{display:flex;align-items:flex-start;gap:11px}.fact-icon{font-size:17px;width:33px;height:33px;display:grid;place-items:center;background:#edeee3;border-radius:9px;flex-shrink:0}.fact strong{font-size:11px;font-weight:600;display:block;margin:2px 0 6px}.fact p{font-size:10px;color:var(--muted);line-height:1.8;margin:0}.health-note{color:#858879;font-size:10px;line-height:1.8;text-align:center;max-width:860px;margin:20px auto 0}.health-note strong{font-weight:500;color:#676f5d}footer{display:flex;justify-content:space-between;padding:20px 0 24px;color:#969989;gap:20px;font-size:9px;letter-spacing:.3px}footer span:last-child{letter-spacing:1.2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:1400px){.wrap{max-width:1220px}.hero{padding-top:55px;padding-bottom:39px}.food{min-height:89px}.art{height:240px}}
+@media(max-width:800px){.wrap{padding:0 24px}.workspace{grid-template-columns:1.1fr 1fr;gap:16px}.menu-panel{padding:20px}.result-panel{padding:22px 19px 18px}.food-grid{gap:6px}.food{min-height:78px}.hero{padding-top:35px}.hero-stamp{margin-right:0}.art{height:210px}.result-title{font-size:23px}.small-caps{font-size:8px;letter-spacing:1px}.bottom{gap:15px}.food-name{font-size:10px}.panel-heading{gap:6px}h2{font-size:15px}.text-button{font-size:10px}}
+@media(max-width:620px){.wrap{padding:0 20px}header{height:76px}.brand-mark{height:36px;width:36px;border-radius:12px}.brand-name{font-size:17px}.brand-sub{font-size:8px}.header-note{font-size:10px;gap:5px}.hero{padding:32px 0 27px;gap:12px;align-items:center}h1{font-size:34px;letter-spacing:-1.6px}.eyebrow{font-size:9px;margin-bottom:12px;letter-spacing:1.3px}.hero-copy{font-size:11px;margin-top:16px;max-width:240px}.hero-stamp{height:66px;width:66px;margin-right:2px;gap:3px}.hero-stamp strong{font-size:14px}.hero-stamp span:first-child{font-size:7px;letter-spacing:1px}.hero-stamp span:last-child{font-size:7px}.workspace{grid-template-columns:1fr;gap:18px}.menu-panel{padding:21px}.panel-heading{margin-bottom:17px}h2{font-size:16px}.food-grid{gap:8px}.food{min-height:76px}.food-emoji{font-size:25px}.food-name{font-size:11px}.custom-label{margin-top:17px}.result-panel{padding:23px;min-height:470px}.result-title{font-size:28px}.art{height:213px}.poop-svg{width:178px}.result-sub{font-size:12px}.explanation p{font-size:12px}.result-foot span{font-size:10px}.result-foot{margin-top:17px}.save-button{font-size:11px;padding:9px 12px}.bottom{grid-template-columns:1fr;gap:17px;margin-top:25px;padding-bottom:22px}.fact p{font-size:11px}.fact strong{font-size:12px}.fact-icon{width:36px;height:36px}.health-note{text-align:left;font-size:10px;margin-top:18px}footer{font-size:8px;gap:8px}.generate{min-height:50px}.text-button{min-height:32px}.spark.one{left:22%}.spark.two{right:18%}.orbit-note{right:18px}}
+@media(max-width:360px){.wrap{padding:0 14px}.hero-stamp{display:none}.menu-panel{padding:16px}.header-note{font-size:9px}.food-name{font-size:10px}h1{font-size:32px}.result-foot span{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <a class="brand" href="#" aria-label="便便色卡首页">
+    <span class="brand-mark"><svg width="28" height="28" viewBox="0 0 200 200" aria-hidden="true"><path fill="#f7f5ed" d="M65 77C54 60 79 48 91 33C98 25 93 17 95 16C111 17 130 35 127 52C150 49 169 69 156 89C184 96 186 121 170 131C198 146 186 177 165 177H36C11 177 3 148 26 134C12 116 27 92 48 94C42 81 52 73 65 77Z"/><circle cx="77" cy="122" r="7" fill="#405b37"/><circle cx="126" cy="122" r="7" fill="#405b37"/><path d="M88 143Q102 156 116 142" stroke="#405b37" stroke-width="5" fill="none" stroke-linecap="round"/></svg></span>
+    <span class="brand-name">便便色卡<span class="brand-sub">POOP PALETTE</span></span>
+  </a>
+  <span class="header-note"><i class="live-dot"></i> 饭后娱乐 · 快乐消化</span>
+</header>
+<main>
+  <section class="hero" aria-labelledby="page-title">
+    <div><div class="eyebrow">A LITTLE FOOD. A LITTLE SCIENCE. A LOT OF FUN.</div><h1 id="page-title">今天吃什么，<br>明天<span>什么色？</span></h1><p class="hero-copy">每一顿饭，都有自己的「出色」方式。<br>报上今日菜单，看看你的肠道会交出什么作品。</p></div>
+    <div class="hero-stamp" aria-label="非严肃研究所"><span>EST. TODAY</span><strong>非严肃</strong><span>便便研究所</span></div>
+  </section>
+  <div class="workspace">
+    <section class="menu-panel" aria-labelledby="menu-heading">
+      <div class="panel-heading"><div class="step-label"><span class="step-number">01</span><h2 id="menu-heading">今天都吃了啥？</h2></div><button class="text-button" id="random" type="button"><span aria-hidden="true">⤮</span> 来份随机菜单</button></div>
+      <div class="food-grid" id="foods" aria-label="选择今天吃过的食物，可多选"></div>
+      <label class="custom-label" for="custom-food">菜单里没有？自己加点料</label>
+      <div class="input-wrap"><input id="custom-food" type="text" maxlength="180" placeholder="比如：菠菜、甜菜、黑芝麻……" autocomplete="off"></div>
+      <div class="selection-bar"><span id="selected-count">已选 <strong>0</strong> 种食物</span><button class="text-button" id="clear" type="button">清空菜单</button></div>
+      <p id="message" class="message" role="status"></p>
+      <button class="generate" id="generate" type="button"><span>生成我的便便色卡</span><span class="arrow" aria-hidden="true">↗</span></button>
+      <p class="under-button">不收集你的菜单，消化这件事很私密。</p>
+    </section>
+    <section class="result-panel" id="result-panel" aria-labelledby="result-heading">
+      <div class="result-head"><div class="step-label"><span class="step-number">02</span><h2 id="result-heading">你的专属色卡</h2></div><span class="small-caps">THE DAILY OUTPUT</span></div>
+      <div class="art" aria-hidden="true"><span class="spark one">✧</span><span class="spark two">✦</span><span class="spark three">✳</span><span class="orbit-note" id="orbit-note">内有乾坤</span>
+        <svg class="poop-svg" id="poop-svg" viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="110" cy="193" rx="75" ry="8" fill="#55462c" opacity=".09"/>
+          <path class="poop-fill" d="M73 79C60 62 82 51 96 35C105 25 99 17 103 16C121 18 138 37 133 56C158 52 178 73 163 94C193 101 194 127 176 138C204 151 194 181 171 181H44C17 181 10 152 34 139C16 121 33 97 55 99C49 85 59 75 73 79Z"/>
+          <path d="M77 81Q114 93 144 75M58 108Q113 125 162 102M44 145Q112 163 174 143" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".12"/>
+          <ellipse cx="82" cy="128" rx="8" ry="10" fill="#30291f"/><ellipse cx="137" cy="128" rx="8" ry="10" fill="#30291f"/>
+          <circle cx="84" cy="125" r="2.5" fill="#fffdf2"/><circle cx="139" cy="125" r="2.5" fill="#fffdf2"/>
+          <ellipse cx="66" cy="145" rx="10" ry="5" fill="#e3a48b" opacity=".65"/><ellipse cx="154" cy="145" rx="10" ry="5" fill="#e3a48b" opacity=".65"/>
+          <path d="M99 147Q110 159 122 146" stroke="#30291f" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div id="result-content" aria-live="polite" aria-atomic="true"><h3 class="result-title" id="color-title">肚子里有什么？</h3><p class="result-sub" id="color-sub">选好今日菜单，让答案「便」得有趣。</p></div>
+      <div class="swatches" id="swatches" aria-label="五种食物联想色"></div>
+      <div class="explanation"><div class="explanation-head"><strong id="explanation-label">一份来自肠道的创作邀请</strong><span class="hex" id="hex">LET IT GO.</span></div><p id="explanation">蔬菜、甜菜、深色食物……都可能给日常的棕色添点变化。选几样试试，今天的灵感由你提供。</p></div>
+      <div class="result-foot"><span>食物联想色 · 仅供娱乐 · 非实测</span><button class="save-button" id="save" type="button" disabled><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v9m-3-3 3 3 3-3M2 10v4h12v-4"/></svg> 保存色卡</button></div>
+    </section>
+  </div>
+  <aside class="bottom" aria-label="肠道冷知识">
+    <div class="fact"><span class="fact-icon" aria-hidden="true">🥬</span><div><strong>吃进去的颜色，未必原样出来</strong><p>绿叶菜、甜菜等可能影响便色，但不是调色盘式的混色。</p></div></div>
+    <div class="fact"><span class="fact-icon" aria-hidden="true">◷</span><div><strong>肠道也有自己的工作日程</strong><p>消化和排出的时间因人而异，不一定是「今天吃，明天见」。</p></div></div>
+    <div class="fact"><span class="fact-icon" aria-hidden="true">🤎</span><div><strong>棕色，才是日常主角</strong><p>正常便色通常为棕色，主要与胆汁色素的转化有关。</p></div></div>
+  </aside>
+  <p class="health-note"><strong>认真一句：</strong>饮食无法准确预测实际便色，本页不用于健康判断。若出现柏油样黑便、明显血便或灰白便，尤其伴腹痛、头晕等不适，请及时就医。</p>
+</main>
+<footer><span>便便色卡 © <span id="year"></span> · 愿每一次输出，都轻松自在。</span><span>MADE WITH FOOD & GOOD MOOD</span></footer>
+</div>
+<script>
+'use strict';
+const FOODS = [
+  {id:'rice',name:'米饭 / 面食',emoji:'🍚',group:'brown',aliases:['米饭','白饭','米线','米粉','粥','馒头','包子','面条','面食','饺子','面包','披萨','rice','bread','noodles']},
+  {id:'meat',name:'肉肉',emoji:'🥩',group:'brown',aliases:['猪肉','牛肉','羊肉','鸡肉','鸭肉','肉','火锅','汉堡','烧烤','beef','chicken','meat']},
+  {id:'egg',name:'鸡蛋',emoji:'🥚',group:'brown',aliases:['鸡蛋','鸭蛋','煎蛋','蒸蛋','egg']},
+  {id:'milk',name:'牛奶 / 酸奶',emoji:'🥛',group:'brown',aliases:['牛奶','酸奶','奶酪','奶茶','milk','yogurt']},
+  {id:'spinach',name:'菠菜',emoji:'🥬',group:'green',aliases:['菠菜','青菜','油麦菜','生菜','空心菜','羽衣甘蓝','绿叶菜','spinach','lettuce','kale']},
+  {id:'broccoli',name:'西兰花',emoji:'🥦',group:'green',aliases:['西兰花','西蓝花','broccoli']},
+  {id:'carrot',name:'胡萝卜',emoji:'🥕',group:'warm',aliases:['胡萝卜','红萝卜','carrot']},
+  {id:'pumpkin',name:'南瓜',emoji:'🎃',group:'warm',aliases:['南瓜','红薯','番薯','地瓜','pumpkin','sweet potato']},
+  {id:'beet',name:'甜菜根',emoji:'🫜',group:'red',aliases:['甜菜','甜菜根','beet']},
+  {id:'dragonfruit',name:'红心火龙果',emoji:'🌺',group:'red',aliases:['红心火龙果','红肉火龙果','红火龙果','火龙果','dragon fruit']},
+  {id:'blueberry',name:'蓝莓',emoji:'🫐',group:'dark',aliases:['蓝莓','桑葚','桑椹','blueberry','blueberries','mulberry']},
+  {id:'sesame',name:'黑芝麻',emoji:'⚫',group:'dark',aliases:['黑芝麻','芝麻糊','black sesame']},
+  {id:'coffee',name:'咖啡',emoji:'☕',group:'brown',aliases:['咖啡','拿铁','美式','卡布奇诺','coffee','latte']},
+  {id:'chocolate',name:'巧克力',emoji:'🍫',group:'brown',aliases:['巧克力','可可','chocolate','cocoa']},
+  {id:'banana',name:'香蕉',emoji:'🍌',group:'brown',aliases:['香蕉','banana']},
+  {id:'tomato',name:'番茄',emoji:'🍅',group:'brown',aliases:['番茄','西红柿','tomato']}
+];
+const PALETTES = {
+  brown:{title:'经典巧克力棕',sub:'日常发挥，也是一种稳定的优秀。',hex:'#926044',bg:'#ebe7d8',accent:'#71523c',note:'稳定输出选手',explain:'普通混合饮食通常没有明确的便色线索，棕色仍是常见底色。咖啡和巧克力也不会让便便自动变成它们的颜色。'},
+  green:{title:'田园抹茶棕',sub:'今天的肠道，走了一点田园风。',hex:'#77834e',bg:'#e5ead9',accent:'#52633c',note:'有点菜，但可爱',explain:'绿叶蔬菜中的色素可能让便色偏绿，也可能仍是棕色。消化速度等因素同样会影响结果，这张只是食物联想色。'},
+  warm:{title:'南瓜拿铁棕',sub:'暖暖的配色，像一杯秋天的拿铁。',hex:'#ad7542',bg:'#f0e4d1',accent:'#805332',note:'暖色系艺术家',explain:'胡萝卜、南瓜等含有类胡萝卜素，较大量食用时可能带来橙黄调。不过普通份量未必改变便色，仍可能呈棕色。'},
+  red:{title:'莓果玫瑰棕',sub:'今日限定：带一点莓果感的创作。',hex:'#9a5854',bg:'#f0e1dc',accent:'#86534e',note:'自带食物滤镜',explain:'甜菜、红心火龙果的色素可能使排泄物偏红或紫红，是否出现与摄入量和个体差异有关。食物解释不能用来排除出血。'},
+  dark:{title:'午夜可可棕',sub:'给今天的作品，加一层深色滤镜。',hex:'#655344',bg:'#e7e2da',accent:'#625044',note:'低调的深色派',explain:'蓝莓、桑葚等深色食物较大量食用后，可能使便色变深；黑芝麻也可能留下深色残渣。这不代表能预测黑便，柏油样黑便需重视。'}
+};
+const selected = new Set();
+let latest = null;
+let menuRevision = 0;
+const $ = id => document.getElementById(id);
+const foodGrid = $('foods');
+for (const food of FOODS) {
+  const button = document.createElement('button');
+  button.type = 'button'; button.className = 'food'; button.dataset.id = food.id;
+  button.setAttribute('aria-pressed','false');
+  const emoji = document.createElement('span'); emoji.className='food-emoji'; emoji.textContent=food.emoji; emoji.setAttribute('aria-hidden','true');
+  const name = document.createElement('span'); name.className='food-name'; name.textContent=food.name;
+  const check = document.createElement('span'); check.className='check'; check.textContent='✓'; check.setAttribute('aria-hidden','true');
+  button.append(emoji,name,check);
+  button.addEventListener('click',()=>{selected.has(food.id)?selected.delete(food.id):selected.add(food.id);updateMenu();});
+  foodGrid.append(button);
+}
+for (const [key,palette] of Object.entries(PALETTES)) {
+  const swatch=document.createElement('span'); swatch.className='swatch'; swatch.dataset.key=key; swatch.style.setProperty('--swatch',palette.hex); swatch.title=palette.title; swatch.setAttribute('aria-label',palette.title); $('swatches').append(swatch);
+}
+function readMenu() {
+  const raw=$('custom-food').value.trim();
+  const lower=raw.toLowerCase();
+  const recognized=FOODS.filter(food=>food.aliases.some(alias=>/^[a-z ]+$/.test(alias)?new RegExp('\\b'+alias+'\\b','i').test(lower):lower.includes(alias)));
+  // 白心火龙果与红心品种不同，不把明确的白心描述当作红色色素线索。
+  const filtered=recognized.filter(food=>food.id!=='dragonfruit'||!/(白心|白肉)火龙果/.test(raw)||/(红心|红肉|红)火龙果/.test(raw));
+  const ids=new Set([...selected,...filtered.map(food=>food.id)]);
+  const tokens=raw.split(/[，,、；;\n]+/).map(x=>x.trim()).filter(Boolean);
+  const unknown=tokens.filter(token=>!FOODS.some(food=>food.aliases.some(alias=>token.toLowerCase().includes(alias))));
+  return {foods:FOODS.filter(food=>ids.has(food.id)),raw,unknown};
+}
+function updateMenu() {
+  menuRevision++;
+  foodGrid.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(selected.has(button.dataset.id))));
+  const menu=readMenu();
+  $('selected-count').replaceChildren(document.createTextNode('已识别 '));
+  const strong=document.createElement('strong');strong.textContent=String(menu.foods.length);$('selected-count').append(strong,document.createTextNode(' 种食物'));
+  $('message').textContent='';
+  if(latest){$('generate').firstElementChild.textContent='更新我的便便色卡';$('save').disabled=true;$('message').textContent='菜单已变动，重新生成即可更新色卡。';}
+}
+$('custom-food').addEventListener('input',updateMenu);
+$('custom-food').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();generate();}});
+function reset() {
+  selected.clear();$('custom-food').value='';latest=null;updateMenu();
+  const panel=$('result-panel');panel.style.removeProperty('--poop');panel.style.removeProperty('--card');panel.style.removeProperty('--accent');panel.classList.remove('reveal');
+  $('color-title').textContent='肚子里有什么？';$('color-sub').textContent='选好今日菜单，让答案「便」得有趣。';$('orbit-note').textContent='内有乾坤';
+  $('explanation-label').textContent='一份来自肠道的创作邀请';$('hex').textContent='LET IT GO.';$('explanation').textContent='蔬菜、甜菜、深色食物……都可能给日常的棕色添点变化。选几样试试，今天的灵感由你提供。';
+  $('swatches').querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));$('save').disabled=true;$('generate').firstElementChild.textContent='生成我的便便色卡';
+}
+$('clear').addEventListener('click',reset);
+const examples=[['rice','meat','spinach','broccoli'],['rice','egg','dragonfruit'],['milk','banana','blueberry','sesame'],['rice','pumpkin','carrot','meat'],['rice','egg','tomato','coffee']];
+let lastExample=-1;
+$('random').addEventListener('click',()=>{
+  let index=Math.floor(Math.random()*examples.length);if(index===lastExample)index=(index+1)%examples.length;lastExample=index;
+  reset();examples[index].forEach(id=>selected.add(id));updateMenu();
+});
+function choosePalette(foods) {
+  const groups=new Set(foods.map(food=>food.group));
+  // A playful association, not a physical mixture or a medical prediction.
+  return ['red','green','dark','warm'].find(group=>groups.has(group))||'brown';
+}
+function generate() {
+  const menu=readMenu();
+  if(!menu.foods.length&&!menu.raw){$('message').textContent='先选一道食物，或者写下今天吃了什么吧。';return;}
+  const key=choosePalette(menu.foods),palette=PALETTES[key];
+  const groups=[...new Set(menu.foods.map(food=>food.group).filter(group=>group!=='brown'))];
+  let explanation=palette.explain;
+  if(groups.length>1)explanation+=' 这份菜单有多种色素线索，此处只选一种作趣味展示，并非实际混色结果。';
+  if(menu.unknown.length||!menu.foods.length)explanation+=' 部分自填食物暂未收录，未据此判断颜色。';
+  const panel=$('result-panel');panel.style.setProperty('--poop',palette.hex);panel.style.setProperty('--card',palette.bg);panel.style.setProperty('--accent',palette.accent);
+  $('color-title').textContent=palette.title;$('color-sub').textContent=palette.sub;$('orbit-note').textContent=palette.note;
+  $('explanation-label').textContent='为什么是这个联想色？';$('hex').textContent=palette.hex.toUpperCase();$('explanation').textContent=explanation;
+  $('swatches').querySelectorAll('.swatch').forEach(s=>s.classList.toggle('active',s.dataset.key===key));
+  latest={key,palette,explanation,menu};$('save').disabled=false;$('message').textContent='';$('generate').firstElementChild.textContent='再生成一次色卡';
+  panel.classList.remove('reveal');void panel.offsetWidth;panel.classList.add('reveal');
+  if(matchMedia('(max-width:620px)').matches)panel.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'});
+}
+$('generate').addEventListener('click',generate);
+function canvasWrap(ctx,text,x,y,width,lineHeight,maxLines=99){
+  let line='',lines=0;
+  for(const char of text){if(ctx.measureText(line+char).width>width&&line){ctx.fillText(line,x,y);y+=lineHeight;line=char;lines++;if(lines>=maxLines){return y;}}else line+=char;}
+  if(line){ctx.fillText(line,x,y);y+=lineHeight;}return y;
+}
+$('save').addEventListener('click',async()=>{
+  if(!latest)return;
+  const result=latest,revision=menuRevision;const button=$('save');button.disabled=true;
+  try{
+    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1440;
+    const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas unavailable');
+    const palette=result.palette;ctx.fillStyle=palette.bg;ctx.fillRect(0,0,1080,1440);
+    ctx.fillStyle=palette.accent;ctx.font='600 24px "Microsoft YaHei", sans-serif';ctx.textAlign='left';ctx.fillText('便便色卡 / POOP PALETTE',76,94);
+    ctx.textAlign='right';ctx.font='20px sans-serif';ctx.fillText(new Date().toLocaleDateString('zh-CN'),1004,94);
+    const svg=$('poop-svg').cloneNode(true);svg.setAttribute('width','440');svg.setAttribute('height','420');svg.querySelector('.poop-fill').setAttribute('fill',palette.hex);svg.removeAttribute('class');
+    const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg));});
+    ctx.drawImage(image,320,168,440,420);ctx.textAlign='center';ctx.fillStyle='#30382c';ctx.font='900 64px "Microsoft YaHei", sans-serif';ctx.fillText(palette.title,540,675);
+    ctx.fillStyle=palette.accent;ctx.font='28px "Microsoft YaHei", sans-serif';ctx.fillText(palette.sub,540,738);
+    const keys=Object.keys(PALETTES);keys.forEach((key,index)=>{ctx.fillStyle=PALETTES[key].hex;ctx.fillRect(357+index*76,795,62,22);});
+    ctx.font='22px monospace';ctx.fillStyle=palette.accent;ctx.fillText(palette.hex.toUpperCase()+' · 食物联想色',540,866);
+    ctx.strokeStyle='#30382c30';ctx.beginPath();ctx.moveTo(76,922);ctx.lineTo(1004,922);ctx.stroke();
+    ctx.textAlign='left';ctx.fillStyle='#30382c';ctx.font='600 26px "Microsoft YaHei", sans-serif';ctx.fillText('今日灵感菜单',76,984);
+    ctx.font='24px "Microsoft YaHei", sans-serif';ctx.fillStyle=palette.accent;
+    const menuNames=[...result.menu.foods.map(food=>food.name),...(result.menu.raw?['自填：'+result.menu.raw]:[])].join(' · ');
+    canvasWrap(ctx,menuNames,76,1036,928,38,3);
+    ctx.font='22px "Microsoft YaHei", sans-serif';ctx.fillStyle='#666a59';canvasWrap(ctx,'饮食无法准确预测实际便色。这是一张趣味联想色卡，不是实测结果，也不用于健康判断。',76,1230,928,36,3);
+    ctx.font='19px "Microsoft YaHei", sans-serif';ctx.fillStyle=palette.accent;ctx.fillText('愿每一次输出，都轻松自在。',76,1370);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('Export unavailable');
+    const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='便便色卡-'+palette.title+'.png';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }catch(error){$('message').textContent='当前浏览器未能保存图片，可以截图保存这张色卡。';}
+  finally{button.disabled=latest!==result||menuRevision!==revision;}
+});
+$('year').textContent=String(new Date().getFullYear());
+</script>
+</body>
+</html>
